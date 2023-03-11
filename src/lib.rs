@@ -1,3 +1,5 @@
+use std::error::Error;
+use std::fs;
 pub fn parse_config(args: &[String]) -> Config {
     //Parsing the command line arguments
     let query = args[1].clone();
@@ -16,6 +18,8 @@ impl Config {
         //Checking if the user has provided enough arguments
         if args.len() < 3 {
             return Err("Not enough arguments");
+        } else if args.len() > 3 {
+            return Err("Too many arguments");
         }
 
         //Parsing the command line arguments
@@ -24,4 +28,11 @@ impl Config {
 
         Ok(Config { query, filename })
     }
+}
+
+pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let content = fs::read_to_string(config.filename)?;
+    println!("\nWith text:\n{} ", content);
+
+    Ok(())
 }
